@@ -1,26 +1,16 @@
 #!/usr/bin/python
 
 from PCA9685 import PCA9685
+from hand_config import *
 
 # Initialize PCA9685
-pwm = PCA9685(0x40, debug=False)
-pwm.setPWMFreq(50)  # Set frequency to 50Hz for servos
-
-# Define servo positions (in microseconds)
-MIN_PULSE = 500   # Minimum pulse width (0.5ms)
-MAX_PULSE = 2500  # Maximum pulse width (2.5ms)
-
-# Finger channel mapping
-PINKY = 4
+pwm = PCA9685(PCA9685_ADDRESS, debug=False)
+pwm.setPWMFreq(PWM_FREQUENCY)
 
 print("Relaxing all fingers to open position...")
 
-for channel in range(5):
-    if channel != PINKY:
-        # Reversed fingers: MAX pulse = open
-        pwm.setServoPulse(channel, MAX_PULSE)
-    else:
-        # Normal pinky: MIN pulse = open
-        pwm.setServoPulse(channel, MIN_PULSE)
+for channel in ALL_FINGERS:
+    open_pulse = get_open_pulse(channel)
+    pwm.setServoPulse(channel, open_pulse)
 
 print("All fingers relaxed and extended")
