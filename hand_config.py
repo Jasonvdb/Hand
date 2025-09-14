@@ -40,6 +40,16 @@ REVERSED_FINGERS = [THUMB, INDEX, MIDDLE, RING]
 # Normal fingers (MIN pulse = open, MAX pulse = closed)
 NORMAL_FINGERS = [PINKY]
 
+# Finger offsets from fully open position (in microseconds)
+# Positive values move the finger slightly inward from fully open
+FINGER_OFFSETS = {
+    THUMB: 0,     # No offset
+    INDEX: 0,     # No offset
+    MIDDLE: 0,    # No offset
+    RING: 0,      # No offset
+    PINKY: 100    # Slight inward position (~5 degrees)
+}
+
 # Timing delays
 MOVEMENT_DELAY = 1  # seconds between servo movements
 
@@ -51,7 +61,16 @@ def is_reversed(channel):
 
 def get_open_pulse(channel):
     """Get the pulse width for open/extended position for a given finger."""
-    return MAX_PULSE if is_reversed(channel) else MIN_PULSE
+    base_pulse = MAX_PULSE if is_reversed(channel) else MIN_PULSE
+    offset = FINGER_OFFSETS.get(channel, 0)
+    
+    # Apply offset in the correct direction
+    if is_reversed(channel):
+        # For reversed fingers, subtract offset to move inward
+        return base_pulse - offset
+    else:
+        # For normal fingers, add offset to move inward
+        return base_pulse + offset
 
 
 def get_closed_pulse(channel):
