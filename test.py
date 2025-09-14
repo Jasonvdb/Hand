@@ -34,19 +34,41 @@ for channel in range(5):
     finger = finger_names[channel]
     print(f"\nTesting {finger} (channel {channel})")
     
-    # Move to minimum position (finger open)
-    print(f"  {finger}: Opening (MIN position)")
-    pwm.setServoPulse(channel, MIN_PULSE)
-    time.sleep(1)
-    
-    # Move to maximum position (finger closed)
-    print(f"  {finger}: Closing (MAX position)")
-    pwm.setServoPulse(channel, MAX_PULSE)
-    time.sleep(1)
-    
-    # Return to center position (finger neutral)
-    print(f"  {finger}: Neutral (CENTER position)")
-    pwm.setServoPulse(channel, MID_PULSE)
-    time.sleep(1)
+    # Reverse logic for all fingers except pinky (channel 4)
+    if channel != PINKY:
+        # Reversed: MAX pulse = open, MIN pulse = closed
+        print(f"  {finger}: Opening (MAX position - reversed)")
+        pwm.setServoPulse(channel, MAX_PULSE)
+        time.sleep(1)
+        
+        print(f"  {finger}: Closing (MIN position - reversed)")
+        pwm.setServoPulse(channel, MIN_PULSE)
+        time.sleep(1)
+        
+        print(f"  {finger}: Neutral (CENTER position)")
+        pwm.setServoPulse(channel, MID_PULSE)
+        time.sleep(1)
+    else:
+        # Normal: MIN pulse = open, MAX pulse = closed
+        print(f"  {finger}: Opening (MIN position)")
+        pwm.setServoPulse(channel, MIN_PULSE)
+        time.sleep(1)
+        
+        print(f"  {finger}: Closing (MAX position)")
+        pwm.setServoPulse(channel, MAX_PULSE)
+        time.sleep(1)
+        
+        print(f"  {finger}: Neutral (CENTER position)")
+        pwm.setServoPulse(channel, MID_PULSE)
+        time.sleep(1)
 
-print("\nHand test complete - all 5 fingers have been tested")
+print("\nRelaxing all fingers to open position...")
+for channel in range(5):
+    if channel != PINKY:
+        # Reversed fingers: MAX pulse = open
+        pwm.setServoPulse(channel, MAX_PULSE)
+    else:
+        # Normal pinky: MIN pulse = open
+        pwm.setServoPulse(channel, MIN_PULSE)
+    
+print("Hand test complete - all fingers relaxed and extended")
