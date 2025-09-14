@@ -1,33 +1,15 @@
 #!/usr/bin/python
 
-import time
-from PCA9685 import PCA9685
-from hand_config import *
-from relax import relax_hand
+from hand_control import HandController
 
-# Initialize PCA9685
-pwm = PCA9685(PCA9685_ADDRESS, debug=False)
-pwm.setPWMFreq(PWM_FREQUENCY)
+# Initialize hand controller
+hand = HandController(debug=True)
 
 print("Starting mechanical hand test - bending each finger fully")
 
-# Test each finger individually
-for channel in ALL_FINGERS:
-    finger = FINGER_NAMES[channel]
-    print(f"\nTesting {finger}")
-    
-    # Get appropriate pulse values based on finger configuration
-    open_pulse = get_open_pulse(channel)
-    closed_pulse = get_closed_pulse(channel)
-    
-    print(f"  Opening {finger}")
-    pwm.setServoPulse(channel, open_pulse)
-    time.sleep(MOVEMENT_DELAY)
-    
-    print(f"  Closing {finger}")
-    pwm.setServoPulse(channel, closed_pulse)
-    time.sleep(MOVEMENT_DELAY)
+# Test all fingers individually
+hand.test_all_fingers()
 
 # Relax hand to release servo tension
-relax_hand(pwm)
+hand.relax()
 print("Hand test complete")
