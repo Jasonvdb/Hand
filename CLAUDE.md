@@ -67,9 +67,45 @@ Standard servo pulse widths:
 - MID_PULSE: 1500 microseconds (finger neutral)
 - MAX_PULSE: 2500 microseconds (finger closed/flexed)
 
+### Using hand_config.py
+
+When creating new scripts, always import and use the hand_config module for consistent configuration:
+
+```python
+#!/usr/bin/python
+from PCA9685 import PCA9685
+from hand_config import *
+
+# Initialize the PCA9685
+pwm = PCA9685(PCA9685_ADDRESS)
+pwm.setPWMFreq(PWM_FREQUENCY)
+
+# Use predefined finger channels
+pwm.setServoPulse(THUMB, get_open_pulse(THUMB))
+pwm.setServoPulse(INDEX, get_closed_pulse(INDEX))
+
+# Work with all fingers
+for finger in ALL_FINGERS:
+    pulse = get_neutral_pulse(finger)
+    pwm.setServoPulse(finger, pulse)
+```
+
+Key configuration features:
+- **Finger Constants**: Use `THUMB`, `INDEX`, `MIDDLE`, `RING`, `PINKY` instead of raw channel numbers
+- **Pulse Functions**: Use `get_open_pulse()`, `get_closed_pulse()`, `get_neutral_pulse()` to handle reversed servo logic automatically
+- **Reversed Logic**: Thumb, Index, Middle, Ring use reversed logic (MAX=open, MIN=closed). Pinky uses normal logic
+- **Finger Offsets**: Pinky has a 100μs offset from fully open position for optimal positioning
+- **Timing**: Use `MOVEMENT_DELAY` (1 second) between servo movements
+
 ## Important Notes
 
 - All Python scripts must include the shebang `#!/usr/bin/python` for execution on the Pi
 - The PCA9685 library is only available on the Pi, not in local development
 - Use 50Hz PWM frequency for servo control
 - Allow 1 second delay between servo movements for smooth operation
+- **IMPORTANT**: Always call the `relax_hand()` function from `relax.py` at the end of each script to release servo tension:
+  ```python
+  from relax import relax_hand
+  # ... your code ...
+  relax_hand(pwm)  # Pass your pwm instance, or None to create a new one
+  ```

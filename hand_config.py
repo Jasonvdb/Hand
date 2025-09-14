@@ -44,8 +44,8 @@ NORMAL_FINGERS = [PINKY]
 # Positive values move the finger slightly inward from fully open
 FINGER_OFFSETS = {
     THUMB: 0,     # No offset
-    INDEX: 0,     # No offset
-    MIDDLE: 0,    # No offset
+    INDEX: 0,   # No offset
+    MIDDLE: 300,  # Slight inward position (~5 degrees)
     RING: 0,      # No offset
     PINKY: 100    # Slight inward position (~5 degrees)
 }
