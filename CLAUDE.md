@@ -21,7 +21,7 @@ This is a Raspberry Pi-based mechanical hand control system that uses servo moto
 
 ### Deploying Code to the Pi
 
-The repository includes a sync script that automatically copies Python files to the Raspberry Pi:
+**IMPORTANT: Run the sync script after every Python code change to deploy to the Pi:**
 
 ```bash
 ./sync_with_pi.sh
@@ -31,6 +31,7 @@ This script:
 - Uses rsync to copy all `.py` files to `hand.local:~/Hand`
 - Preserves directory structure
 - Shows progress during transfer
+- Should be run automatically after any Python file modification
 
 ### Running Scripts on the Pi
 
@@ -39,6 +40,17 @@ Scripts should be run directly on the Raspberry Pi after syncing:
 1. Sync files: `./sync_with_pi.sh`
 2. SSH to Pi: `ssh jason@hand.local`
 3. Run script: `python ~/Hand/test.py`
+
+### Auto-run on File Changes
+
+For development, use the watch_and_run.sh script on the Pi to automatically run a Python file whenever it changes:
+
+1. SSH to Pi: `ssh jason@hand.local`
+2. Start watching: `./watch_and_run.sh test.py`
+3. In another terminal, run `./sync_with_pi.sh` after each code change
+4. The script will automatically detect changes and re-run the Python file
+
+This enables a rapid development cycle where code changes are automatically executed on the Pi.
 
 ## Code Architecture
 
