@@ -9,25 +9,18 @@ from relax import relax_hand
 pwm = PCA9685(PCA9685_ADDRESS, debug=False)
 pwm.setPWMFreq(PWM_FREQUENCY)
 
-print("Starting mechanical hand test - bending each finger fully")
+print("Making a fist - closing all fingers")
 
-# Test each finger individually
+# Close all fingers simultaneously to make a fist
 for channel in ALL_FINGERS:
     finger = FINGER_NAMES[channel]
-    print(f"\nTesting {finger}")
-    
-    # Get appropriate pulse values based on finger configuration
-    open_pulse = get_open_pulse(channel)
     closed_pulse = get_closed_pulse(channel)
-    
-    print(f"  Opening {finger}")
-    pwm.setServoPulse(channel, open_pulse)
-    time.sleep(MOVEMENT_DELAY)
-    
     print(f"  Closing {finger}")
     pwm.setServoPulse(channel, closed_pulse)
-    time.sleep(MOVEMENT_DELAY)
+
+# Hold the fist position
+time.sleep(MOVEMENT_DELAY * 2)
 
 # Relax hand to release servo tension
 relax_hand(pwm)
-print("Hand test complete")
+print("Grip complete")

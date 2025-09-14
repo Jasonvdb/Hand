@@ -50,6 +50,16 @@ FINGER_OFFSETS = {
     PINKY: 100    # Slight inward position (~5 degrees)
 }
 
+# Finger closed position offsets (in microseconds)
+# For fingers that need extra pull to fully close
+FINGER_CLOSED_OFFSETS = {
+    THUMB: 0,     # No offset
+    INDEX: 300,   # Less pull (300μs back from fully closed)
+    MIDDLE: -200, # Extra pull for full closure
+    RING: 200,    # Less pull (200μs back from fully closed)
+    PINKY: -400   # Less pull (400μs back from fully closed for normal logic)
+}
+
 # Timing delays
 MOVEMENT_DELAY = 1  # seconds between servo movements
 
@@ -75,7 +85,11 @@ def get_open_pulse(channel):
 
 def get_closed_pulse(channel):
     """Get the pulse width for closed/flexed position for a given finger."""
-    return MIN_PULSE if is_reversed(channel) else MAX_PULSE
+    base_pulse = MIN_PULSE if is_reversed(channel) else MAX_PULSE
+    offset = FINGER_CLOSED_OFFSETS.get(channel, 0)
+    
+    # Apply offset (negative values pull harder/further)
+    return base_pulse + offset
 
 
 def get_neutral_pulse(channel):
