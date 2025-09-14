@@ -1,8 +1,6 @@
 #!/usr/bin/python
 
 import time
-import sys
-sys.path.append('/home/jason/Bot/example_code/python')
 from PCA9685 import PCA9685
 
 # Initialize PCA9685

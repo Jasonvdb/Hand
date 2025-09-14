@@ -56,10 +56,9 @@ This enables a rapid development cycle where code changes are automatically exec
 
 ### Servo Control
 
-All servo control is done through the PCA9685 library located at `/home/jason/Bot/example_code/python` on the Pi. Scripts must add this to the Python path:
+The PCA9685 library is included locally in this repository. Import it directly:
 
 ```python
-sys.path.append('/home/jason/Bot/example_code/python')
 from PCA9685 import PCA9685
 ```
 
